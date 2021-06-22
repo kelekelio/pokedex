@@ -3,6 +3,8 @@ package com.grzegorznowakowski.pokedex.pokemon.controller;
 import com.grzegorznowakowski.pokedex.pokemon.entity.PokemonEntity;
 import com.grzegorznowakowski.pokedex.pokemon.repository.PokemonRepository;
 import com.grzegorznowakowski.pokedex.type.controller.TypeNotFoundException;
+import com.grzegorznowakowski.pokedex.type.entity.Type;
+import com.grzegorznowakowski.pokedex.type.repository.TypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,10 @@ public class PokemonController {
 
     private final PokemonRepository repository;
 
+    @Autowired
+    private TypeRepository typeRepository;
+
+
     PokemonController(PokemonRepository repository) {
         this.repository = repository;
     }
@@ -26,8 +32,23 @@ public class PokemonController {
         return repository.findAll();
     }
 
+    @GetMapping("/api/pokemons/type/{type}")
+    List<PokemonEntity> listAllByType(@PathVariable String type) {
+        return repository.findByType(type);
+    }
+
+
     @PostMapping("/api/pokemons")
     PokemonEntity newPokemon(@RequestBody PokemonEntity newPokemon) {
+
+        List<Type> allTypes = typeRepository.findAll();
+
+        for (Type pokeType: newPokemon.getTypes()) {
+            if (allTypes.stream().noneMatch(o -> o.getId().equals(pokeType.getId()))) {
+                typeRepository.save(pokeType);
+            }
+        }
+
         return repository.save(newPokemon);
     }
 
