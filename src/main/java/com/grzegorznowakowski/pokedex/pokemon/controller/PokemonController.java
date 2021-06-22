@@ -1,70 +1,83 @@
 package com.grzegorznowakowski.pokedex.pokemon.controller;
 
 import com.grzegorznowakowski.pokedex.pokemon.entity.PokemonEntity;
+import com.grzegorznowakowski.pokedex.pokemon.model.PokemonModelAssembler;
 import com.grzegorznowakowski.pokedex.pokemon.repository.PokemonRepository;
-import com.grzegorznowakowski.pokedex.type.controller.TypeNotFoundException;
 import com.grzegorznowakowski.pokedex.type.entity.Type;
 import com.grzegorznowakowski.pokedex.type.repository.TypeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 /**
  * @author Grzegorz Nowakowski
  */
 @RestController
+@RequestMapping("/api")
 public class PokemonController {
 
     private final PokemonRepository repository;
 
-    @Autowired
-    private TypeRepository typeRepository;
+    private final PokemonModelAssembler assembler;
+
+    private final TypeRepository typeRepository;
 
 
-    PokemonController(PokemonRepository repository) {
+    PokemonController(PokemonRepository repository, PokemonModelAssembler assembler, TypeRepository typeRepository) {
         this.repository = repository;
+        this.assembler = assembler;
+        this.typeRepository = typeRepository;
     }
 
 
-    @GetMapping("/api/pokemons")
-    List<PokemonEntity> all() {
-        return repository.findAll();
+    @GetMapping("/pokemon")
+    public CollectionModel<EntityModel<PokemonEntity>> all() {
+
+        List<EntityModel<PokemonEntity>> pokemons = repository.findAll().stream()
+                .map(assembler::toModel)
+                .collect(Collectors.toList());
+
+        return CollectionModel.of(pokemons, linkTo(methodOn(PokemonController.class).all()).withSelfRel());
     }
 
-    @GetMapping("/api/pokemons/type/{type}")
-    List<PokemonEntity> listAllByType(@PathVariable String type) {
-        return repository.findByType(type);
+
+
+    @GetMapping("/pokemon/{id}")
+    public EntityModel<PokemonEntity> one(@PathVariable Integer id) {
+        PokemonEntity pokemon = repository.findById(id).orElseThrow(() -> new PokemonNotFoundException(id));
+
+        return assembler.toModel(pokemon);
     }
 
 
-    @PostMapping("/api/pokemons")
-    PokemonEntity newPokemon(@RequestBody PokemonEntity newPokemon) {
+    @PostMapping("/pokemon")
+    ResponseEntity<?> newPokemon(@RequestBody PokemonEntity newPokemon) {
 
         List<Type> allTypes = typeRepository.findAll();
-
         for (Type pokeType: newPokemon.getTypes()) {
             if (allTypes.stream().noneMatch(o -> o.getId().equals(pokeType.getId()))) {
                 typeRepository.save(pokeType);
             }
         }
 
-        return repository.save(newPokemon);
+        EntityModel<PokemonEntity> entityModel = assembler.toModel(repository.save(newPokemon));
+
+        return ResponseEntity
+                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                .body(entityModel);
     }
 
-    @GetMapping("/api/pokemons/{value}")
-    PokemonEntity findById(@PathVariable String value) {
 
-        if(value.matches("\\d*")){
-            return repository.findById(Integer.valueOf(value)).orElseThrow(() -> new PokemonNotFoundException(Integer.valueOf(value)));
-        } else {
-            return repository.findByName(value).orElseThrow(() -> new PokemonNotFoundException(value));
-        }
-    }
+    @PutMapping("/pokemon/{id}")
+    ResponseEntity<?> replacePokemon(@RequestBody PokemonEntity newPokemon, @PathVariable Integer id) {
 
-    @PutMapping("/api/pokemons/{id}")
-    PokemonEntity replacePokemon(@RequestBody PokemonEntity newPokemon, @PathVariable Integer id) {
-        return repository.findById(id)
+        PokemonEntity updatedPokemon = repository.findById(id)
                 .map(pokemon -> {
                     pokemon.setName(newPokemon.getName());
                     return repository.save(pokemon);
@@ -72,12 +85,21 @@ public class PokemonController {
                 .orElseGet(() -> {
                     newPokemon.setId(id);
                     return repository.save(newPokemon);
-                        });
+                });
+
+        EntityModel<PokemonEntity> entityModel = assembler.toModel(updatedPokemon);
+
+        return ResponseEntity
+                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                .body(entityModel);
     }
 
-    @DeleteMapping("/api/pokemons/{id}")
-    void deletePokemon(@PathVariable Integer id) {
+    @DeleteMapping("/pokemon/{id}")
+    ResponseEntity<?> deletePokemon(@PathVariable Integer id) {
+
         repository.deleteById(id);
+
+        return ResponseEntity.noContent().build();
     }
 
 }

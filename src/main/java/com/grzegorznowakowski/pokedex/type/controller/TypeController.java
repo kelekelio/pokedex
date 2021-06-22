@@ -8,7 +8,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * @author Grzegorz Nowakowski
+ */
 @RestController
+@RequestMapping("/api")
 public class TypeController {
 
     private final TypeRepository repository;
@@ -17,17 +21,17 @@ public class TypeController {
         this.repository = repository;
     }
 
-    @GetMapping("/api/types")
+    @GetMapping("/types")
     List<Type> all() {
         return repository.findAll();
     }
 
-    @PostMapping("/api/types")
+    @PostMapping("/types")
     Type newType(@RequestBody Type newType) {
         return repository.save(newType);
     }
 
-    @GetMapping("/api/types/{value}")
+    @GetMapping("/types/{value}")
     Type getTypeByNameOrId(@PathVariable String value) {
 
         if(value.matches("\\d*")){
@@ -38,7 +42,7 @@ public class TypeController {
     }
 
 
-    @PutMapping("/api/types/{id}")
+    @PutMapping("/types/{id}")
     Type replaceType(@RequestBody Type newType, @PathVariable Long id) {
         return repository.findById(id)
                 .map(type -> {
@@ -51,7 +55,7 @@ public class TypeController {
                 });
     }
 
-    @DeleteMapping("/api/types/{id}")
+    @DeleteMapping("/types/{id}")
     void deletePokemon(@PathVariable Long id) {
         repository.deleteById(id);
     }
