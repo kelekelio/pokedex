@@ -2,6 +2,7 @@ package com.grzegorznowakowski.pokedex.pokemon.controller;
 
 import com.grzegorznowakowski.pokedex.pokemon.entity.PokemonEntity;
 import com.grzegorznowakowski.pokedex.pokemon.repository.PokemonRepository;
+import com.grzegorznowakowski.pokedex.type.controller.TypeNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,9 +31,14 @@ public class PokemonController {
         return repository.save(newPokemon);
     }
 
-    @GetMapping("/api/pokemons/{id}")
-    PokemonEntity findById(@PathVariable Integer id) {
-        return repository.findById(id).orElseThrow(() -> new PokemonNotFoundException(id));
+    @GetMapping("/api/pokemons/{value}")
+    PokemonEntity findById(@PathVariable String value) {
+
+        if(value.matches("\\d*")){
+            return repository.findById(Integer.valueOf(value)).orElseThrow(() -> new PokemonNotFoundException(Integer.valueOf(value)));
+        } else {
+            return repository.findByName(value).orElseThrow(() -> new PokemonNotFoundException(value));
+        }
     }
 
     @PutMapping("/api/pokemons/{id}")
