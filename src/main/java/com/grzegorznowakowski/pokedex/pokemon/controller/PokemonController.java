@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
@@ -92,16 +93,32 @@ public class PokemonController {
 
 
 
+
+    /*
     @GetMapping("/pokemon/{id}")
     public EntityModel<PokemonEntity> one(@PathVariable Integer id) {
         PokemonEntity pokemon = repository.findById(id).orElseThrow(() -> new PokemonNotFoundException(id));
-
         return assembler.toModel(pokemon);
     }
 
     @GetMapping("/pokemon/name/{name}")
     public EntityModel<PokemonEntity> oneByName(@PathVariable String name) {
         PokemonEntity pokemon = repository.findByName(name).orElseThrow(() -> new PokemonNotFoundException(name));
+        return assembler.toModel(pokemon);
+    }
+
+     */
+
+    @GetMapping("/pokemon/{value}")
+    public EntityModel<PokemonEntity> one(@PathVariable String value) {
+        PokemonEntity pokemon;
+
+        if(value.matches("\\d*")){
+            pokemon = repository.findById(Integer.valueOf(value)).orElseThrow(() -> new PokemonNotFoundException(Integer.valueOf(value)));
+        } else {
+            pokemon = repository.findByName(value).orElseThrow(() -> new PokemonNotFoundException(value));
+        }
+
         return assembler.toModel(pokemon);
     }
 
@@ -114,6 +131,10 @@ public class PokemonController {
             if (allTypes.stream().noneMatch(o -> o.getId().equals(pokeType.getId()))) {
                 typeRepository.save(pokeType);
             }
+        }
+
+        if (repository.findByName(newPokemon.getName()).isPresent()) {
+            throw new PokemonAlreadyExistsException(newPokemon.getName());
         }
 
         EntityModel<PokemonEntity> entityModel = assembler.toModel(repository.save(newPokemon));
@@ -151,5 +172,25 @@ public class PokemonController {
 
         return ResponseEntity.noContent().build();
     }
+
+
+    @PostMapping("/pokemon/test")
+    ResponseEntity<?> newtestPokemon(@RequestBody PokemonEntity newPokemon) {
+
+        PokemonEntity pokemon1 = new PokemonEntity(100, "test", newPokemon.getTypes());
+
+        EntityModel<PokemonEntity> entityModel = assembler.toModel(repository.save(pokemon1));
+
+        return ResponseEntity
+                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                .body(entityModel);
+    }
+
+
+
+
+
+
+
 
 }
