@@ -4,9 +4,8 @@ import com.grzegorznowakowski.pokedex.pokemon.entity.PokemonEntity;
 import com.grzegorznowakowski.pokedex.pokemon.model.PokemonModelAssembler;
 import com.grzegorznowakowski.pokedex.pokemon.repository.PokemonPagesRepository;
 import com.grzegorznowakowski.pokedex.pokemon.repository.PokemonRepository;
-import com.grzegorznowakowski.pokedex.type.entity.Type;
-import com.grzegorznowakowski.pokedex.type.repository.TypeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.grzegorznowakowski.pokedex.pokemonType.entity.PokemonType;
+import com.grzegorznowakowski.pokedex.pokemonType.repository.PokemonTypeRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -33,7 +32,7 @@ public class PokemonController {
 
     private final PokemonModelAssembler assembler;
 
-    private final TypeRepository typeRepository;
+    private final PokemonTypeRepository typeRepository;
 
     private final PokemonPagesRepository pokemonPagesRepository;
 
@@ -43,7 +42,7 @@ public class PokemonController {
     PokemonController(PokemonRepository repository,
                       PokemonPagesRepository pokemonPagesRepository,
                       PokemonModelAssembler assembler,
-                      TypeRepository typeRepository,
+                      PokemonTypeRepository typeRepository,
                       PagedResourcesAssembler<PokemonEntity> pagedResourcesAssembler) {
         this.repository = repository;
         this.assembler = assembler;
@@ -53,8 +52,8 @@ public class PokemonController {
     }
 
 
-    /*
-    @GetMapping("/pokemon")
+
+    @GetMapping("/allpokemon")
     public CollectionModel<EntityModel<PokemonEntity>> all() {
 
         List<EntityModel<PokemonEntity>> pokemons = repository.findAll().stream()
@@ -64,14 +63,26 @@ public class PokemonController {
         return CollectionModel.of(pokemons, linkTo(methodOn(PokemonController.class).all()).withSelfRel());
     }
 
-     */
+
 
     @GetMapping("/pokemon")
     public ResponseEntity<PagedModel<EntityModel<PokemonEntity>>> getAllPokemon(Pageable pageable) {
-        Page<PokemonEntity> poemons = pokemonPagesRepository.findAll(pageable);
+        Page<PokemonEntity> pokemons = pokemonPagesRepository.findAll(pageable);
 
         PagedModel<EntityModel<PokemonEntity>> model = pagedResourcesAssembler
-                .toModel(poemons, assembler);
+                .toModel(pokemons, assembler);
+
+        return new ResponseEntity<>(model, HttpStatus.OK);
+
+
+    }
+
+    @GetMapping("/pokemon/type/{type}")
+    public ResponseEntity<PagedModel<EntityModel<PokemonEntity>>> getAllPokemonByType(@PathVariable String type, Pageable pageable) {
+        Page<PokemonEntity> pokemons = pokemonPagesRepository.findByType(type, pageable);
+
+        PagedModel<EntityModel<PokemonEntity>> model = pagedResourcesAssembler
+                .toModel(pokemons, assembler);
 
         return new ResponseEntity<>(model, HttpStatus.OK);
 
@@ -88,12 +99,18 @@ public class PokemonController {
         return assembler.toModel(pokemon);
     }
 
+    @GetMapping("/pokemon/name/{name}")
+    public EntityModel<PokemonEntity> oneByName(@PathVariable String name) {
+        PokemonEntity pokemon = repository.findByName(name).orElseThrow(() -> new PokemonNotFoundException(name));
+        return assembler.toModel(pokemon);
+    }
+
 
     @PostMapping("/pokemon")
     ResponseEntity<?> newPokemon(@RequestBody PokemonEntity newPokemon) {
 
-        List<Type> allTypes = typeRepository.findAll();
-        for (Type pokeType: newPokemon.getTypes()) {
+        List<PokemonType> allTypes = typeRepository.findAll();
+        for (PokemonType pokeType: newPokemon.getTypes()) {
             if (allTypes.stream().noneMatch(o -> o.getId().equals(pokeType.getId()))) {
                 typeRepository.save(pokeType);
             }

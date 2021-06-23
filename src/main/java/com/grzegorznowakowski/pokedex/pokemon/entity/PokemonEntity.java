@@ -1,8 +1,6 @@
 package com.grzegorznowakowski.pokedex.pokemon.entity;
 
-import com.grzegorznowakowski.pokedex.type.entity.Type;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
+import com.grzegorznowakowski.pokedex.pokemonType.entity.PokemonType;
 
 import javax.persistence.*;
 import java.util.List;
@@ -28,7 +26,7 @@ public class PokemonEntity {
             joinColumns=@JoinColumn(name="pokemon_id"),
             inverseJoinColumns=@JoinColumn(name="type_id")
     )
-    private Set<Type> types;
+    private Set<PokemonType> types;
 
 
 
@@ -51,11 +49,11 @@ public class PokemonEntity {
         this.name = name;
     }
 
-    public Set<Type> getTypes() {
+    public Set<PokemonType> getTypes() {
         return types;
     }
 
-    public void setTypes(Set<Type> types) {
+    public void setTypes(Set<PokemonType> types) {
         this.types = types;
     }
 }

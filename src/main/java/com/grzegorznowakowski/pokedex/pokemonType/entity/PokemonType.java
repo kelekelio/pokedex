@@ -1,13 +1,16 @@
-package com.grzegorznowakowski.pokedex.type.entity;
+package com.grzegorznowakowski.pokedex.pokemonType.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @author Grzegorz Nowakowski
  */
 @Entity
 @Table(name="type")
-public class Type {
+public class PokemonType {
 
     @Id
     @Column(name="type_id")
