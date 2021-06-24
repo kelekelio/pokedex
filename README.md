@@ -24,7 +24,7 @@ create database pokedex
 or change the database name in application.properties
 ```
 spring.datasource.url=jdbc:mysql://localhost:3306/pokedex?useSSL=false&serverTimezone=CET
-'''
+```
 
 **3. Change mysql username and password as per your installation**
 
