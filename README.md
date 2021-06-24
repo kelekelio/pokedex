@@ -57,7 +57,7 @@ In order to receive an API key, register a new user.
 
 
 ```
-**POST** http://localhost:8080/users/signup
+POST http://localhost:8080/users/signup
 ```
 
 and set the body to JSON
@@ -74,7 +74,7 @@ With a user registered, login and the API key should be in the header of the res
 
 
 ```
-**POST** http://localhost:8080/login
+POST http://localhost:8080/login
 ```
 
 ```
@@ -84,4 +84,18 @@ With a user registered, login and the API key should be in the header of the res
 }
 ```
 
+From now on, set the key in the header of every request to consume the API.
+
+## Pokemon
+
+Available endpoints:
+
+|Type|URL|variable|Description|
+|---|---|---|---|
+|** GET **|/api//pokemon||Returns a paginated list of all Pokemon. size=, page= variables available!
+|** GET **|/api//pokemon/type/{type}|String|Returns a list of all Pokemon of provided Type|
+|** GET **|/api//pokemon/{value}|String or Integer|Returns o pokemon of given ID or name|
+|** POST **|/api/pokemon|Pokemon Object|Insterts a given Pokemon into the database|
+|** PUT **|/api/pokemon/{id}|Integer|Updates a Pokemon of given ID|
+|** DELETE **|/api/pokemon/{id}|Integer|Deletes a Pokemon of Given ID|
 
