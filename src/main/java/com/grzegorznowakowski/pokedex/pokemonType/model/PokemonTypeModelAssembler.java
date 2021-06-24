@@ -17,6 +17,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Component
 public class PokemonTypeModelAssembler implements RepresentationModelAssembler<PokemonType, EntityModel<PokemonType>> {
 
+    //TODO instead of all(), use alltypes()
     @Override
     public EntityModel<PokemonType> toModel(PokemonType pokemonType) {
 

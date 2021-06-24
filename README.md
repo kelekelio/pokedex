@@ -99,9 +99,35 @@ Available endpoints:
 |GET|/api/pokemon||Returns a paginated list of all Pokemon. size=, page= and sort= variables available! By default, only 20 records per page are returned.
 |GET|/api/pokemon/type/{type}|String|Returns a list of all Pokemon of provided Type|
 |GET|/api/pokemon/{value}|String or Integer|Returns a pokemon of given ID or name|
-|POST|/api/pokemon|Pokemon Object|Insterts a given Pokemon into the database|
+|POST|/api/pokemon|Pokemon Object|Inserts a given Pokemon into the database|
 |PUT|/api/pokemon/{id}|Integer|Updates a Pokemon of given ID|
 |DELETE|/api/pokemon/{id}|Integer|Deletes a Pokemon of Given ID|
+
+
+```
+{
+    "id": 1,
+    "name": "Bulbasaur",
+    "types": [
+        {
+            "id": 2,
+            "name": "Poison"
+        },
+        {
+            "id": 1,
+            "name": "Grass"
+        }
+    ],
+    "_links": {
+        "self": {
+            "href": "http://localhost:8080/api/pokemon/1"
+        },
+        "pokemons": {
+            "href": "http://localhost:8080/api/allpokemon"
+        }
+    }
+}
+```
 
 ## Pokemon Type
 
@@ -111,6 +137,22 @@ Available endpoints:
 |---|---|---|---|
 |GET|/api/type||Returns a paginated list of all Pokemon Types. size=, page= and sort= variables available! By default, only 20 records per page are returned.
 |GET|/api/type/{id}|Long|Returns a pokemon type of given ID|
-|POST|/api/type|PokemonType Object|Insterts a given Pokemon type into the database|
+|POST|/api/type|PokemonType Object|Inserts a given Pokemon type into the database|
 |PUT|/api/type/{id}|Long|Updates a Pokemon type of given ID|
 |DELETE|/api/type/{id}|Long|Deletes a Pokemon type of Given ID|
+
+
+```
+{
+    "id": 1,
+    "name": "Grass",
+    "_links": {
+        "self": {
+            "href": "http://localhost:8080/api/type/1"
+        },
+        "types": {
+            "href": "http://localhost:8080/api/alltypes"
+        }
+    }
+}
+```

@@ -67,6 +67,7 @@ public class PokemonController {
 
 
 
+
     @GetMapping("/pokemon")
     public ResponseEntity<PagedModel<EntityModel<PokemonEntity>>> getAllPokemon(Pageable pageable) {
         Page<PokemonEntity> pokemons = pokemonPagesRepository.findAll(pageable);
