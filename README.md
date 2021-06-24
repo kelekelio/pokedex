@@ -48,6 +48,40 @@ mvn spring-boot:run
 
 The app will run at http://localhost:8080
 
-## Available APIs
+## User
 
-** 1. Pokemon**
+All APIs are protected and require authentication to be used.
+In order to receive an API key, register a new user.
+
+** Register a user **
+
+[b]POST[/b]
+```
+http://localhost:8080/users/signup
+```
+
+and set the body to JSON
+```
+{
+    "username": "username",
+    "password": "password"
+}
+```
+
+** Retrive API key **
+
+With a user registered, login and the API key should be in the header of the response.
+
+[b]POST[/b]
+```
+http://localhost:8080/login
+```
+
+```
+{
+    "username": "testing",
+    "password": "password"
+}
+```
+
+
