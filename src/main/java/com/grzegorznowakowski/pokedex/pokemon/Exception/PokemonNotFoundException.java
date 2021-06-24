@@ -1,16 +1,16 @@
-package com.grzegorznowakowski.pokedex.pokemon.controller;
+package com.grzegorznowakowski.pokedex.pokemon.Exception;
 
 /**
  * @author Grzegorz Nowakowski
  */
 public class PokemonNotFoundException extends RuntimeException {
-    PokemonNotFoundException (Integer id) {
+    public PokemonNotFoundException (Integer id) {
         super("Pokemon with " + id +  " ID could not be found.");
     }
-    PokemonNotFoundException (String name) {
+    public PokemonNotFoundException (String name) {
         super(name + " Pokemon could not be found.");
     }
-    PokemonNotFoundException() {
+    public PokemonNotFoundException() {
         super("No Pokemon matching specified criteria could be found.");
     }
 }

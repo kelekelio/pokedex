@@ -1,4 +1,4 @@
-package com.grzegorznowakowski.pokedex.pokemon.controller;
+package com.grzegorznowakowski.pokedex.pokemon.Exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;

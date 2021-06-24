@@ -1,4 +1,4 @@
-package com.grzegorznowakowski.pokedex.pokemon.controller;
+package com.grzegorznowakowski.pokedex.pokemonType.Exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @author Grzegorz Nowakowski
  */
 @ControllerAdvice
-public class PokemonNotFoundAdvice {
+public class PokemonTypeNotFoundAdvice {
 
     @ResponseBody
-    @ExceptionHandler(PokemonNotFoundException.class)
+    @ExceptionHandler(PokemonTypeNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String pokemonNotFound(PokemonNotFoundException e) {
+    String pokemonTypeNotFound(PokemonTypeNotFoundException e) {
         return e.getMessage();
     }
 }

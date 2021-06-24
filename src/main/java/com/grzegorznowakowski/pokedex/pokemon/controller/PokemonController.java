@@ -1,5 +1,7 @@
 package com.grzegorznowakowski.pokedex.pokemon.controller;
 
+import com.grzegorznowakowski.pokedex.pokemon.Exception.PokemonAlreadyExistsException;
+import com.grzegorznowakowski.pokedex.pokemon.Exception.PokemonNotFoundException;
 import com.grzegorznowakowski.pokedex.pokemon.entity.PokemonEntity;
 import com.grzegorznowakowski.pokedex.pokemon.model.PokemonModelAssembler;
 import com.grzegorznowakowski.pokedex.pokemon.repository.PokemonPagesRepository;
@@ -17,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
@@ -53,7 +54,7 @@ public class PokemonController {
     }
 
 
-
+    //TODO remove allpokemon if possible
     @GetMapping("/allpokemon")
     public CollectionModel<EntityModel<PokemonEntity>> all() {
 
@@ -74,8 +75,6 @@ public class PokemonController {
                 .toModel(pokemons, assembler);
 
         return new ResponseEntity<>(model, HttpStatus.OK);
-
-
     }
 
     @GetMapping("/pokemon/type/{type}")

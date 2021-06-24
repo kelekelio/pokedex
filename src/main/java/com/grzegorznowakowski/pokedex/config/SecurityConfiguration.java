@@ -34,9 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private static final String[] AUTH_WHITELIST = {
-            "/v2/api-docs",
-            "/login",
-            "/users/signup"
+            "/v2/api-docs"
     };
 
     public SecurityConfiguration(UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -48,6 +46,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             httpSecurity.cors().and().csrf().disable().authorizeRequests()
                     .antMatchers(AUTH_WHITELIST).permitAll()
                     .antMatchers(HttpMethod.POST, "/users/signup").permitAll()
+                    .antMatchers(HttpMethod.POST, "/login").permitAll()
                     .anyRequest().authenticated()
                     .and().addFilter(new AuthenticationFilter(authenticationManager()))
                     .addFilter(new AuthorizationFilter(authenticationManager()))

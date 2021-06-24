@@ -28,10 +28,13 @@ public class UserController
 
     //TODO: limit to ADMINs only
     //.antMatchers("/user/delete/**").hasAnyRole("ADMIN")
+    /*
     @DeleteMapping("/user/delete/{name}")
     public void deleteUser(@RequestParam String name) {
         User user = userRepository.findByUsername(name);
         userRepository.delete(user);
     }
+
+     */
 
 }

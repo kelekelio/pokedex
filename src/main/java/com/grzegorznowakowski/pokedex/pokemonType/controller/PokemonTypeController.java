@@ -1,10 +1,10 @@
 package com.grzegorznowakowski.pokedex.pokemonType.controller;
 
-import com.grzegorznowakowski.pokedex.pokemon.controller.PokemonController;
-import com.grzegorznowakowski.pokedex.pokemon.controller.PokemonNotFoundException;
 import com.grzegorznowakowski.pokedex.pokemon.entity.PokemonEntity;
+import com.grzegorznowakowski.pokedex.pokemonType.Exception.PokemonTypeNotFoundException;
 import com.grzegorznowakowski.pokedex.pokemonType.entity.PokemonType;
 import com.grzegorznowakowski.pokedex.pokemonType.model.PokemonTypeModelAssembler;
+import com.grzegorznowakowski.pokedex.pokemonType.repository.PokemonTypePagesRepository;
 import com.grzegorznowakowski.pokedex.pokemonType.repository.PokemonTypeRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,15 +36,30 @@ public class PokemonTypeController {
 
     private final PagedResourcesAssembler<PokemonType> pagedResourcesAssembler;
 
+    private final PokemonTypePagesRepository pokemonTypePagesRepository;
+
     public PokemonTypeController(PokemonTypeRepository pokemonTypeRepository,
                                  PokemonTypeModelAssembler pokemonTypeModelAssembler,
-                                 PagedResourcesAssembler<PokemonType> pagedResourcesAssembler) {
+                                 PagedResourcesAssembler<PokemonType> pagedResourcesAssembler,
+                                 PokemonTypePagesRepository pokemonTypePagesRepository) {
         this.pokemonTypeRepository = pokemonTypeRepository;
         this.pokemonTypeModelAssembler = pokemonTypeModelAssembler;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
+        this.pokemonTypePagesRepository = pokemonTypePagesRepository;
     }
 
+    //TODO remove alltypes if possible
     @GetMapping("/type")
+    public ResponseEntity<PagedModel<EntityModel<PokemonType>>> getAllPokemonTypes(Pageable pageable) {
+        Page<PokemonType> types = pokemonTypePagesRepository.findAll(pageable);
+
+        PagedModel<EntityModel<PokemonType>> model = pagedResourcesAssembler
+                .toModel(types, pokemonTypeModelAssembler);
+
+        return new ResponseEntity<>(model, HttpStatus.OK);
+    }
+
+    @GetMapping("/alltypes")
     public CollectionModel<EntityModel<PokemonType>> all() {
 
         List<EntityModel<PokemonType>> pokemonTypes = pokemonTypeRepository.findAll().stream()
