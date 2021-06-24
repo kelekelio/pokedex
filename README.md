@@ -92,7 +92,7 @@ Available endpoints:
 
 |Type|URL|variable|Description|
 |---|---|---|---|
-|GET|/api/pokemon||Returns a paginated list of all Pokemon. size=, page= and sort= variables available!
+|GET|/api/pokemon||Returns a paginated list of all Pokemon. size=, page= and sort= variables available! By default, only 20 records per page are returned.
 |GET|/api/pokemon/type/{type}|String|Returns a list of all Pokemon of provided Type|
 |GET|/api/pokemon/{value}|String or Integer|Returns a pokemon of given ID or name|
 |POST|/api/pokemon|Pokemon Object|Insterts a given Pokemon into the database|
@@ -105,7 +105,7 @@ Available endpoints:
 
 |Type|URL|variable|Description|
 |---|---|---|---|
-|GET|/api/type||Returns a paginated list of all Pokemon Types. size=, page= and sort= variables available!
+|GET|/api/type||Returns a paginated list of all Pokemon Types. size=, page= and sort= variables available! By default, only 20 records per page are returned.
 |GET|/api/type/{id}|Long|Returns a pokemon type of given ID|
 |POST|/api/type|PokemonType Object|Insterts a given Pokemon type into the database|
 |PUT|/api/type/{id}|Long|Updates a Pokemon type of given ID|
