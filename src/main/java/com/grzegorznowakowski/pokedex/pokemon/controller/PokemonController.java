@@ -173,17 +173,7 @@ public class PokemonController {
     }
 
 
-    @PostMapping("/pokemon/test")
-    ResponseEntity<?> newtestPokemon(@RequestBody PokemonEntity newPokemon) {
 
-        PokemonEntity pokemon1 = new PokemonEntity(100, "test", newPokemon.getTypes());
-
-        EntityModel<PokemonEntity> entityModel = assembler.toModel(repository.save(pokemon1));
-
-        return ResponseEntity
-                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(entityModel);
-    }
 
 
 
