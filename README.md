@@ -92,10 +92,21 @@ Available endpoints:
 
 |Type|URL|variable|Description|
 |---|---|---|---|
-|GET|/api/pokemon||Returns a paginated list of all Pokemon. size=, page= variables available!
+|GET|/api/pokemon||Returns a paginated list of all Pokemon. size=, page= and sort= variables available!
 |GET|/api/pokemon/type/{type}|String|Returns a list of all Pokemon of provided Type|
-|GET|/api/pokemon/{value}|String or Integer|Returns o pokemon of given ID or name|
+|GET|/api/pokemon/{value}|String or Integer|Returns a pokemon of given ID or name|
 |POST|/api/pokemon|Pokemon Object|Insterts a given Pokemon into the database|
 |PUT|/api/pokemon/{id}|Integer|Updates a Pokemon of given ID|
 |DELETE|/api/pokemon/{id}|Integer|Deletes a Pokemon of Given ID|
 
+## Pokemon Type
+
+Available endpoints:
+
+|Type|URL|variable|Description|
+|---|---|---|---|
+|GET|/api/type||Returns a paginated list of all Pokemon Types. size=, page= and sort= variables available!
+|GET|/api/type/{id}|Long|Returns a pokemon type of given ID|
+|POST|/api/type|PokemonType Object|Insterts a given Pokemon type into the database|
+|PUT|/api/type/{id}|Long|Updates a Pokemon type of given ID|
+|DELETE|/api/type/{id}|Long|Deletes a Pokemon type of Given ID|
