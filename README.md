@@ -55,7 +55,7 @@ In order to receive an API key, register a new user.
 
 ** Register a user **
 
-[b]POST[/b]
+**POST**
 ```
 http://localhost:8080/users/signup
 ```
@@ -72,7 +72,7 @@ and set the body to JSON
 
 With a user registered, login and the API key should be in the header of the response.
 
-[b]POST[/b]
+**POST**
 ```
 http://localhost:8080/login
 ```
