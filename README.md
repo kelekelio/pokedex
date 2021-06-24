@@ -55,6 +55,7 @@ In order to receive an API key, register a new user.
 
 ** Register a user **
 
+![alt text](https://aionpowerbook.com/pokedex/1.jpg)
 
 ```
 POST http://localhost:8080/users/signup
@@ -72,6 +73,9 @@ and set the body to JSON
 
 With a user registered, login and the API key should be in the header of the response.
 
+![alt text](https://aionpowerbook.com/pokedex/2.jpg)
+
+![alt text](https://aionpowerbook.com/pokedex/3.jpg)
 
 ```
 POST http://localhost:8080/login
